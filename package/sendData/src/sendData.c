@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     	int     i;
 	struct  ifreq if_idx;
 	struct  ifreq if_mac;
-	int     tx_len = 0,Cnt;
+	int     tx_len = 0,Cnt, pkt_interval, pktLen;
 	char    sendbuf[BUF_SIZ];
     	unsigned int DstAddr[6];
 	struct  ether_header *eh = (struct ether_header *) sendbuf;
@@ -59,8 +59,8 @@ int main(int argc, char *argv[])
 	
     if (argc == 1)
     {
-        printf("Usage:   %s ifName DstMacAddr NumOfPacketToSend\n",argv[0]);
-        printf("Example: %s wlan0 00:7F:5D:3E:4A 100\n",argv[0]);
+        printf("Usage:   %s ifName DstMacAddr NumOfPacketToSend pktInterval(us) pktLen\n",argv[0]);
+        printf("Example: %s wlan0 00:7F:5D:3E:4A 100 50 1000\n",argv[0]);
         exit(0);
     }
 
@@ -91,6 +91,15 @@ int main(int argc, char *argv[])
     else
         Cnt = 1;
 	
+    if(argc > 4)
+        pkt_interval = atoi(argv[4]);
+    else
+        pkt_interval = 50;
+
+    if(argc > 5)
+        pktLen = atoi(argv[5]);
+    else
+	pktLen = 1000;
  
 	/* Open RAW socket to send on */
 	if ((sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL))) == -1) {
@@ -130,7 +139,7 @@ int main(int argc, char *argv[])
  
 	/* Packet data 
      * We just set it to 0xaa you send arbitrary payload you like*/
-    for(i=1;i<=1000;i++){
+    for(i=1;i<=pktLen;i++){
         
 	    sendbuf[tx_len++] = 0xaa;
     } 
@@ -167,7 +176,7 @@ int main(int argc, char *argv[])
          * for example, here we set it to 50 microseconds
          * set to 0 if you don't need it
          */
-        if (usleep(50) == -1){
+        if (usleep(pkt_interval) == -1){
             printf("sleep failed\n");
         }
         if (sendto(sockfd, sendbuf, tx_len, 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll)) < 0){
