@@ -5,14 +5,17 @@
           |__| W I R E L E S S   F R E E D O M
  -----------------------------------------------------
 
-This is the buildsystem for the OpenWrt Linux distribution.
+This is the 2.0 version of Atheros CSI tool. 
+
+For this version, we add following commits:
+1. Fixed bugs in previous version
+2. Expanded the kernel buffer for higher CSI sampling frequency (up to 4K Hz packet transmissions) 
+2. Simplified processing workflow for improved CSI collection and forwarding efficiency 
+4. Added frame interval control and payload length control options to user space interface "sendData"
 
 To build your own firmware you need a Linux, BSD or MacOSX system (case
 sensitive filesystem required). Cygwin is unsupported because of the lack
 of a case sensitive file system.
-
-You need gcc, binutils, bzip2, flex, python, perl, make, find, grep, diff,
-unzip, gawk, getopt, subversion, libz-dev and libc headers installed.
 
 1. Run "sudo apt-get update && sudo apt-get install git python sed wget cvs \ 
 subversion git-core coreutils unzip texi2html texinfo docbook-utils gawk \
