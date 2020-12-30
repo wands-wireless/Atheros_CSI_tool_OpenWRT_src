@@ -14,16 +14,25 @@ of a case sensitive file system.
 You need gcc, binutils, bzip2, flex, python, perl, make, find, grep, diff,
 unzip, gawk, getopt, subversion, libz-dev and libc headers installed.
 
-1. Run "./scripts/feeds update -a" to obtain all the latest package definitions
+1. Run "sudo apt-get update && sudo apt-get install git python sed wget cvs \ 
+subversion git-core coreutils unzip texi2html texinfo docbook-utils gawk \
+python-pysqlite2 diffstat help2man make gcc g++ build-essential g++ \
+desktop-file-utils chrpath flex libncurses5 libncurses5-dev zlib1g-dev \
+pkg-config gettext libxml-simple-perl guile-1.8 cmake libssl-dev xsltproc \
+fastjar mercurial pngcrush imagemagick tcl binutils bzip2 perl grep diffutils \
+zlib1g zlib1g-dbg zlib1g-dev zlibc zlib-gst ccache distcc gcc-multilib \
+g++-multilib bin86 libtool" to install dependencies. 
+
+2. Run "./scripts/feeds update -a" to obtain all the latest package definitions
 defined in feeds.conf / feeds.conf.default
 
-2. Run "./scripts/feeds install -a" to install symlinks for all obtained
+3. Run "./scripts/feeds install -a" to install symlinks for all obtained
 packages into package/feeds/
 
-3. Run "make menuconfig" to select your preferred configuration for the
+4. Run "make menuconfig" to select your preferred configuration for the
 toolchain, target system & firmware packages.
 
-4. Run "make" to build your firmware. This will download all sources, build
+5. Run "make" to build your firmware. This will download all sources, build
 the cross-compile toolchain and then cross-compile the Linux kernel & all
 chosen applications for your target system.
 
