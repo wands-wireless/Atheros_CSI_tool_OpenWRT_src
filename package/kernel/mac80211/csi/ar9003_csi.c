@@ -47,7 +47,7 @@ volatile u32 csi_len;
 volatile u32 csi_valid;
 volatile u32 recording;
 
-static struct ath9k_csi csi_buf[16];
+static struct ath9k_csi csi_buf[128];
 static char   printbuf[PRINTBUF_LEN];
 
 static int    majorNumber;             	    ///< Stores the device number -- determined automatically
@@ -194,7 +194,7 @@ static ssize_t csi_read(struct file *file, char __user *user_buf,
         len += 2;
         copy_to_user(user_buf,printbuf,len);                // COPY
         
-        csi_tail = (csi_tail+1) & 0x0000000F;               // delete the buffer 
+        csi_tail = (csi_tail+1) & 0x0000007F;               // delete the buffer 
         return len;
     }else
     {
@@ -226,8 +226,10 @@ void csi_record_payload(void* data, u_int16_t data_len)
     struct ath9k_csi* csi;
     if(recording )
     {
-        if( ((csi_head + 1) & 0x0000000F) == csi_tail)              // check and update 
-            csi_tail = (csi_tail + 1) & 0x0000000F;
+        if( ((csi_head + 1) & 0x0000007F) == csi_tail){              // check and update 
+            wake_up_interruptible(&csi_queue);
+	}
+//            csi_tail = (csi_tail + 1) & 0x0000007F;
         
         csi = (struct ath9k_csi*)&csi_buf[csi_head];
         memcpy((void*)(csi->payload_buf),data, data_len);           // copy the payload
@@ -257,8 +259,9 @@ void csi_record_status(struct ath_hw *ah, struct ath_rx_status *rxs, struct ar90
     rx_hw_upload_data_type        = MS(rxsp->status11, AR_hw_upload_data_type);
    
     /* filter out some packets without CSI value (e.g., the beacon)*/
-    if(rxs->rs_phyerr == 0 && rx_hw_upload_data == 0 &&
-                rx_hw_upload_data_valid == 0 && rx_hw_upload_data_type == 0){
+//    if(rxs->rs_phyerr == 0 && rx_hw_upload_data == 0 &&
+//                rx_hw_upload_data_valid == 0 && rx_hw_upload_data_type == 0){
+    if(rx_not_sounding){
         return;
     }
 
@@ -319,7 +322,7 @@ void csi_record_status(struct ath_hw *ah, struct ath_rx_status *rxs, struct ar90
         }
         
         csi_valid = 0;                                  // update 
-        csi_head = (csi_head + 1) & 0x0000000F;
+        csi_head = (csi_head + 1) & 0x0000007F;
 
         wake_up_interruptible(&csi_queue);              // wake up waiting queue 
     }
