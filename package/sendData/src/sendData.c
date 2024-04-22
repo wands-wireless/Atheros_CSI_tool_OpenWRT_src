@@ -40,8 +40,8 @@
 #define DEFAULT_DEST_MAC4	0x20
 #define DEFAULT_DEST_MAC5	0x20
  
-#define DEFAULT_IF	        "wlan0"
-#define BUF_SIZ	            2048	
+#define DEFAULT_IF	        "wlan1"
+#define BUF_SIZ	            4096	
  
 int main(int argc, char *argv[])
 {
