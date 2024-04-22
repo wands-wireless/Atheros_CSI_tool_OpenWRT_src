@@ -3,7 +3,7 @@ This is the 2.0 version of Atheros CSI tool.
 For this version, we add following commits:
 1. Fixed bugs in previous version.
 2. Expanded the kernel buffer for higher CSI sampling frequency (up to 4K Hz packet transmissions). 
-2. Simplified processing workflow for improved CSI collection and forwarding efficiency. 
+3. Simplified processing workflow for improved CSI collection and forwarding efficiency. 
 4. Added frame interval control and payload length control options to user space interface "sendData".
 
 To compile and install Atheros CSI tool, please visit: https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/wiki
